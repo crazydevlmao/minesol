@@ -245,7 +245,7 @@ async function snapshotAndDistributeSOL() {
   if (!eligible.length) return console.log("⚪ [AIRDROP] No eligible holders after blacklist.");
 
   const claimed = lastClaimState?.claimedSol ?? 0;
-  const lamportsToSend = BigInt(Math.floor(claimed * 0.7 * LAMPORTS_PER_SOL));
+  const lamportsToSend = BigInt(Math.floor(claimed * 0.6 * LAMPORTS_PER_SOL));
   if (lamportsToSend <= 0n) return console.log("⚪ [AIRDROP] No SOL available to airdrop.");
 
   await distributeSolProportional(eligible, lamportsToSend);
@@ -260,8 +260,8 @@ async function loop() {
       console.log("⏳ 30s pause → next: SOL AIRDROP");
       await sleep(30_000);
       await snapshotAndDistributeSOL();
-      console.log("🕐 60s cooldown before next cycle...");
-      await sleep(60_000);
+      console.log("🕐 5m cooldown before next cycle...");
+      await sleep(300_000);
     } catch (e: any) {
       console.error("💥 [CYCLE ERROR]", e?.message || e);
       await sleep(5000);
@@ -273,3 +273,4 @@ loop().catch(e => {
   console.error("💣 bananaWorker crashed", e?.message || e);
   process.exit(1);
 });
+
